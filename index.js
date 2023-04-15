@@ -1,5 +1,13 @@
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const express = require('express');
 const app = express();
+
+app.use(bodyParser.json({
+
+}))
+
+app.use(cors())
 
 app.get('/test', function(req, res) {
    console.log(req.params)
@@ -11,6 +19,5 @@ app.listen(6666, function(err) {
    if(err) {
       return console.log(err)
    }
-
-   console.log('server runed')
+   console.log('server runned')
 })
