@@ -1,41 +1,46 @@
 const { Patient } = require('../models')
 
-function PatientController() {
-   Patient.create(data, function(err, doc) {
+function PatientController() { }
+  
+const create = function(req, res) {
+   const data = {
+      fullname: req.body.fullname, 
+      phone: req.body.phone, 
+   };
 
-      if (err) {
-         return res.json({
-            status: 'error',
-            message: err
-         })
-      }
-
-      req.json({
-         status: 'success',
-         data: doc
-      })
-
-   })
-}
-
-PatientController.prototype.add = function(req, res) {
-
-}
-
-PatientController.prototype.all = function (req, res) {
-   Patient.find({}, function (err, docs) {
+   Patient.create(data).then(function(err, doc) {
       if (err) {
          return res.status(500).json({
-            status: 'error',
+            status: false,
             message: err
-         })
+         });
       }
 
-      req.json({
-         status: 'success',
+      res.status(201).json({
+         status: true,
+         data: doc
+      });
+   });
+}
+
+const all = function (req, res) {
+   Patient.find({}).then(function (err, docs) {
+      if (err) {
+         return res.status(500).json({
+            status: false,
+            message: err
+         });
+      }
+
+      res.status(201).json({
+         status: true,
          data: docs
-      })
-   })
+      });
+   });
+}
+
+PatientController.prototype = {
+   all, create
 }
 
 module.exports = PatientController;
