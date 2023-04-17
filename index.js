@@ -1,12 +1,12 @@
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
+const { query } = require('express-validator');
 
 const db = require("./core/db");
 const { PatientCtrl } = require('./controllers');
 
 const app = express();
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(cors())
 
 app.get('/patients', PatientCtrl.all);
