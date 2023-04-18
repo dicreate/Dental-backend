@@ -4,11 +4,18 @@ const { query, validationResult} = require('express-validator');
 function PatientController() { }
 
 const create = function(req, res) {
+
    const data = {
       fullname: req.body.fullname, 
       phone: req.body.phone, 
    };
-   
+
+   const errors = validationResult(req);
+
+   if(!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()});
+   }
+
    Patient.create(data).then((doc) => {
       res.status(201).json({
          status: true,
