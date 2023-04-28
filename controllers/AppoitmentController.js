@@ -1,9 +1,9 @@
-const { Appoitment } = require("../models");
+const { Appoitment, Patient } = require("../models");
 const { validationResult} = require('express-validator');
 
 function AppoitmentController() {}
 
-const create = function(req, res) {
+const create = async function(req, res) {
    
    const errors = validationResult(req);
 
@@ -16,12 +16,19 @@ const create = function(req, res) {
       time: req.body.time,
    };
 
-   console.log(data);
+   try {
+      const patient = await Patient.findOne({_id: data.patient});
+   } catch {
+      return res.status(404).json({
+         status: false,
+         message: "PATIENT_NOT_FOUND"
+      });
+   }
 
    if(!errors.isEmpty()) {
       return res.status(422).json({errors: errors.array()});
    }
-
+ 
    Appoitment.create(data).then((doc) => {
       res.status(201).json({
          status: true,
