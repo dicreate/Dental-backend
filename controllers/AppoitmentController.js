@@ -74,6 +74,50 @@ const remove = async function (req, res) {
    })
 }
 
+const update = async function(req, res) {
+
+   const appoitmentId = req.params.id;
+   const errors = validationResult(req);
+
+   const data = {
+      patient: req.body.patient,
+      dentNumber: req.body.dentNumber,
+      diagnosis: req.body.diagnosis,
+      price: req.body.price,
+      date: req.body.date,
+      time: req.body.time,
+   };
+
+   try {
+      const appoitment = await Appoitment.findOne({_id: appoitmentId});
+   } catch {
+      return res.status(404).json({
+         status: false,
+         message: "PATIENT_NOT_FOUND"
+      });
+   }
+
+   if(!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()});
+   }
+
+   Appoitment.updateOne(
+      {_id: appoitmentId},
+      {$set: data }
+      ).then((doc) => {
+
+      res.status(201).json({
+         status: true,
+         data: doc
+      });
+   }).catch((err) => {
+      return res.status(500).json({
+         status: false,
+         message: err
+      });
+   })
+}
+
 const all = function (req, res) {
    Appoitment.find({})
    .populate('patient')
@@ -92,7 +136,8 @@ const all = function (req, res) {
 AppoitmentController.prototype = {
    all, 
    create,
-   remove
+   remove,
+   update
 }
 
 module.exports = AppoitmentController;

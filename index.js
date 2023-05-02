@@ -16,7 +16,7 @@ app.post('/patients', patientValidation.create, PatientCtrl.create);
 app.get('/appoitments',  AppoitmentCtrl.all);
 app.post('/appoitments',  appoitmentValidation.create, AppoitmentCtrl.create);
 app.delete('/appoitments/:id',  AppoitmentCtrl.remove);
-
+app.patch('/appoitments/:id',appoitmentValidation.create, AppoitmentCtrl.update);
 
 app.listen(6666, function(err) {
    if(err) {
