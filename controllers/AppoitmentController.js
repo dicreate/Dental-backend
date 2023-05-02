@@ -42,6 +42,38 @@ const create = async function(req, res) {
    })
 }
 
+const remove = async function (req, res) {
+
+   const id = req.params.id;
+
+   try {
+      const appoitment = await Appoitment.findOne({_id: id});
+      
+      if (appoitment == null) {
+         return res.status(404).json({
+            status: false,
+            message: "APPOITMENT_NOT_FOUND"
+         });
+      }
+   } catch(err) {
+      return res.status(404).json({
+         status: false,
+         message: "APPOITMENT_NOT_FOUND"
+      });
+   }
+
+   Appoitment.deleteOne({_id: id}).then(() => {
+      res.json({
+         status: "success"
+      })
+   }).catch(err => {
+      return res.status(500).json({
+         status: false,
+         message: err
+      });
+   })
+}
+
 const all = function (req, res) {
    Appoitment.find({})
    .populate('patient')
@@ -58,7 +90,9 @@ const all = function (req, res) {
 }
 
 AppoitmentController.prototype = {
-   all, create
+   all, 
+   create,
+   remove
 }
 
 module.exports = AppoitmentController;

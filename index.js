@@ -15,6 +15,7 @@ app.post('/patients', patientValidation.create, PatientCtrl.create);
 
 app.get('/appoitments',  AppoitmentCtrl.all);
 app.post('/appoitments',  appoitmentValidation.create, AppoitmentCtrl.create);
+app.delete('/appoitments/:id',  AppoitmentCtrl.remove);
 
 
 app.listen(6666, function(err) {
