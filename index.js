@@ -10,10 +10,11 @@ const app = express();
 app.use(express.json())
 app.use(cors())
 
-app.get('/patients',  PatientCtrl.all);
+app.get('/patients/',  PatientCtrl.all);
 app.post('/patients', patientValidation.create, PatientCtrl.create);
 app.patch('/patients/:id', patientValidation.create, PatientCtrl.update);
 app.delete('/patients/:id', PatientCtrl.remove);
+app.get('/patients/:id',  PatientCtrl.show);
 
 app.get('/appoitments',  AppoitmentCtrl.all);
 app.post('/appoitments',  appoitmentValidation.create, AppoitmentCtrl.create);

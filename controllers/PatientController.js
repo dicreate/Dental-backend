@@ -11,8 +11,6 @@ const create = function(req, res) {
       phone: req.body.phone, 
    };
 
-   console.log(data)
-
    if(!errors.isEmpty()) {
       return res.status(422).json({errors: errors.array()});
    }
@@ -34,12 +32,8 @@ const remove = async function (req, res) {
 
    const id = req.params.id;
 
-   console.log(id)
-
    try {
       const patient = await Patient.findOne({_id: id});
-
-      console.log(patient)
       
       if (patient == null) {
          return res.status(404).json({
@@ -119,11 +113,30 @@ const all = function (req, res) {
    });
 }
 
+const show = async function(req, res) {
+
+   const patientId = req.params.id;
+
+   try {
+      const patient = await Patient.findById(patientId);
+      res.json({
+      status: 'success',
+      data: patient
+     })
+   } catch (err) {
+      return res.status(404).json({
+         status: false,
+         message: "PATIENT_NOT_FOUND"
+      });
+   }
+}
+
 PatientController.prototype = {
    all, 
    create,
    update, 
-   remove
+   remove,
+   show
 }
 
 module.exports = PatientController;
