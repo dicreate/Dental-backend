@@ -30,6 +30,46 @@ const create = function(req, res) {
    })
 }
 
+const update = async function(req, res) {
+
+   const patientId = req.params.id;
+   const errors = validationResult(req);
+
+   const data = {
+      fullname: req.body.fullname, 
+      phone: req.body.phone, 
+   };
+
+   try {
+      const patient = await Patient.findOne({_id: patientId});
+   } catch {
+      return res.status(404).json({
+         status: false,
+         message: "PATIENT_NOT_FOUND"
+      });
+   }
+
+   if(!errors.isEmpty()) {
+      return res.status(422).json({errors: errors.array()});
+   }
+
+   Patient.updateOne(
+      {_id: patientId},
+      {$set: data }
+      ).then((doc) => {
+
+      res.status(201).json({
+         status: true,
+         data: doc
+      });
+   }).catch((err) => {
+      return res.status(500).json({
+         status: false,
+         message: err
+      });
+   })
+}
+
 const all = function (req, res) {
    Patient.find({}).then((docs) =>
       res.status(201).json({
@@ -44,7 +84,9 @@ const all = function (req, res) {
 }
 
 PatientController.prototype = {
-   all, create
+   all, 
+   create,
+   update
 }
 
 module.exports = PatientController;
