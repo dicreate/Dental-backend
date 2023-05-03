@@ -30,6 +30,42 @@ const create = function(req, res) {
    })
 }
 
+const remove = async function (req, res) {
+
+   const id = req.params.id;
+
+   console.log(id)
+
+   try {
+      const patient = await Patient.findOne({_id: id});
+
+      console.log(patient)
+      
+      if (patient == null) {
+         return res.status(404).json({
+            status: false,
+            message: "PATIENT_NOT_FOUND"
+         });
+      }
+   } catch(err) {
+      return res.status(404).json({
+         status: false,
+         message: "PATIENT_NOT_FOUND"
+      });
+   }
+
+   Patient.deleteOne({_id: id}).then(() => {
+      res.json({
+         status: "success"
+      })
+   }).catch(err => {
+      return res.status(500).json({
+         status: false,
+         message: err
+      });
+   })
+}
+
 const update = async function(req, res) {
 
    const patientId = req.params.id;
@@ -86,7 +122,8 @@ const all = function (req, res) {
 PatientController.prototype = {
    all, 
    create,
-   update
+   update, 
+   remove
 }
 
 module.exports = PatientController;
