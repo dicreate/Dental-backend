@@ -118,10 +118,11 @@ const show = async function(req, res) {
    const patientId = req.params.id;
 
    try {
-      const patient = await Patient.findById(patientId);
+      const patient = await Patient.findById(patientId).populate('appoitments').exec();
+
       res.json({
       status: 'success',
-      data: patient
+      data: {...patient._doc, appoitments: patient.appoitments}
      })
    } catch (err) {
       return res.status(404).json({
