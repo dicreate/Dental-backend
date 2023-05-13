@@ -120,8 +120,10 @@ const update = async function(req, res) {
 
 const all = function (req, res) {
    Appoitment.find({})
+   .sort({date: 1,
+   time: 1})
    .populate('patient')
-   .then((docs) =>
+   .then((docs) => 
       res.status(201).json({
          status: true,
          data: docs
