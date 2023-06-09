@@ -1,5 +1,6 @@
 const { Appoitment, Patient } = require("../models");
 const { validationResult} = require('express-validator');
+const { groupBy, reduce } = require('lodash')
 
 function AppoitmentController() {}
 
@@ -120,14 +121,19 @@ const update = async function(req, res) {
 
 const all = function (req, res) {
    Appoitment.find({})
-   .sort({date: 1,
-   time: 1})
+   .sort({date: 1, time: 1})
    .populate('patient')
+
    .then((docs) => 
       res.status(201).json({
          status: true,
-         data: docs
-      })).catch((err) => {
+         data: reduce(groupBy(docs, 'date'), (result, value, key) => {
+            result = [...result, {title: key, data: value}];
+            return result;
+         },[])
+      }))
+      
+      .catch((err) => {
       return res.status(500).json({
          status: false,
          message: err
